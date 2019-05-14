@@ -1,73 +1,104 @@
 #pragma once
 #include <iostream>
-//#include <iterator>
 using namespace std;
-
 namespace itertools
 {
 template <typename T, typename U>
-class chain
+class chainIterator
 {
+
 private:
-    T first;
-    U second;
+    const pair<T,T> first;
+    const pair<U,U> second;
 
 public:
-    chain(const T a, const U b)
-    {
-        this->first = a;
-        this->second = b;
-    }
-    class iterator;
-    iterator begin() { return iterator(first.begin(),first.end(),second.begin()); }
-    iterator end() { return iterator(second.begin(), second.begin(), second.begin()); }
+    chainIterator(pair<T,T> a, pair<U,U> b) : first(a), second(b){}
 
     class iterator
     {
     private:
-        T tBegin;
-        T tEnd;
-        U uBegin;
+        pair<T,T> firstPair;
+        pair<U,U> secondPair;
+        bool isFirst;
 
     public:
-        /*typedef T value_type;
-        typedef ptrdiff_t difference_type;
-        typedef T *pointer;
-        typedef T &reference;
-        typedef std::input_iterator_tag iterator_category;
-        */
+        iterator(pair<T,T> a, pair<U,U> b, bool isFirst) : firstPair(a), secondPair(b), isFirst(true){};
 
-        explicit iterator(T tBeg, T endT, U uBeg)
+        auto &operator*()
         {
-            tBegin=tBeg;
-            tEnd=endT;
-            uBegin=uBeg;
+            if (isFirst == true)
+                return *firstPair.first;
+            return *secondPair.first;
         }
 
-        typename chain<T,U> &operator*() const { return nullptr; }
-
-        bool operator==(const iterator &other) const
+        bool operator==(const iterator &ot) const
         {
-            if (tBegin == other.tBegin && tEnd == other.tEnd && uBegin == other.uBegin)
-            {
-                return true;
-            }
-            return false;
+            if (isFirst == true)
+                return firstPair.first == ot.firstPair.second;
+            return secondPair.first == ot.secondPair.second;
         }
 
-        bool operator!=(const iterator &other) const { return !(*this == other); }
+        
 
-        iterator &operator++(int)
+        iterator &operator=(const iterator &other)
         {
-            iterator temp(tBegin, tEnd, uBegin);
-            ++(*this);
-            return temp;
+            firstPair = other.firstPair;
+            secondPair = other.secondPair;
+            isFirst = other.isFirst;
+            return *this;
+        }
+
+        bool operator!=(const iterator &ot) const
+        {
+
+            if (isFirst == true)
+                return firstPair.first != ot.firstPair.second;
+            return secondPair.first != ot.secondPair.second;
         }
         iterator &operator++()
         {
-            ++(*this);
+            if (isFirst == true)
+            {
+                if (++firstPair.first == firstPair.second)
+                    isFirst = false;
+
+                return *this;
+            }
+            secondPair.first++;
             return *this;
         }
+        const iterator operator++(int)
+        {
+            iterator temp = *this;
+            if (isFirst)
+            {
+                if (++firstPair.first == firstPair.second)
+                    isFirst = false;
+                return *this;
+            }
+            secondPair.first++;
+            return temp;
+        }
     };
+public:
+    auto begin() const
+    {
+        return iterator{first, second, true};
+    }
+
+    auto end() const
+    {
+        return iterator{first, second, false};
+    }
 };
+
+template <typename T, typename U>
+auto chain(T first, U second)
+{
+    pair<decltype(first.begin()), decltype(first.end())> firstPair(first.begin(), first.end());
+    pair<decltype(second.begin()), decltype(second.end())> secondPair(second.begin(), second.end());
+
+    return chainIterator<decltype(first.begin()), decltype(second.begin())>(firstPair, secondPair);
+}
+
 } // namespace itertools

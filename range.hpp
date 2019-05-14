@@ -1,61 +1,77 @@
 #pragma once
-#include <iostream>
-#include <iterator>
 
 namespace itertools
 {
+
 template <typename T>
-class range
+class rangeIterator
 {
 private:
-    T start;
-    T last;
+    const T start;
+    const T last;
 
 public:
-    range()
-    {
-        this->start = 0;
-        this->last = 0;
-    }
-
-    range(T a, T b)
-    {
-        this->start = a;
-        this->last = b;
-    }
-    class iterator;
-    iterator begin() { return iterator(this->start); }
-    iterator end() { return iterator(this->last); }
+    rangeIterator(const T &a, const T &b) : start(a), last(b){};
+    
 
     class iterator
     {
     private:
-        T rangeValue;
+        T rangePtr;
 
     public:
-        /*typedef T value_type;
-        typedef ptrdiff_t difference_type;
-        typedef T *pointer;
-        typedef T &reference;
-        typedef std::input_iterator_tag iterator_category;
-        */
-
-        explicit iterator(T value) { rangeValue = value; }
-        T& operator*() { return rangeValue; }
-        bool operator==(const iterator &other) const { return rangeValue == other.rangeValue; }
-        bool operator!=(const iterator &other) const { return !(*this == other); }
-        iterator &operator++(int)
+        iterator(T rangePtr)
         {
-            iterator temp(rangeValue);
-            ++(*this);
-            return temp;
+            this->rangePtr = rangePtr;
         }
-        iterator &operator++()
+
+        T &operator*()
         {
-            ++rangeValue;
+            return rangePtr;
+        }
+        bool operator!=(const iterator &ot) const
+        {
+            return rangePtr != ot.rangePtr;
+        }
+        bool operator==(const iterator &ot) const
+        {
+            return rangePtr == ot.rangePtr;
+        }
+        iterator &operator=(const iterator &ot)
+        {
+            rangePtr = ot.rangePtr;
             return *this;
         }
+
+        iterator &operator++() //postfix
+        {
+            rangePtr++;
+            return *this;
+        }
+
+        const iterator operator++(int) //prefix
+        {
+            iterator tmp = *this;
+            rangePtr++;
+            return tmp;
+        }
     };
+
+    iterator begin() const
+    {
+        return iterator{start};
+    }
+
+    iterator end() const
+    {
+        return iterator{last};
+    }
 };
+
+template <typename T>
+rangeIterator<T> range(T s, T e)
+{
+    return rangeIterator<T>(s, e);
+}
 
 } // namespace itertools

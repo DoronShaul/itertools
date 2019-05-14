@@ -21,7 +21,7 @@ int main()
     if (signal == 0)
     {
         testcase.setname("containers tests")
-        
+            .CHECK_OK(range(1,8))
 
 
         ;
