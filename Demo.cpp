@@ -11,8 +11,8 @@ using namespace std;
 #include "range.hpp"
 #include "chain.hpp"
 #include "zip.hpp"
-//#include "product.hpp"
-//#include "powerset.hpp"
+#include "product.hpp"
+#include "powerset.hpp"
 using namespace itertools;
 
 int main()
@@ -56,7 +56,7 @@ int main()
 		cout << pair << "  ";    // 1,x,a,6  2,y,b,7  3,z,c,8
 
 	cout << endl << endl << "Cartesian product of a range of ints and a string (can be of different sizes)" << endl;
-	/*for (auto pair: product(range(1,4), string("hello")))
+	for (auto pair: product(range(1,4), string("hello")))
 		cout << pair << "  ";    // 1,h  1,e  1,l  1,l  1,o  2,h  2,e  2,l  2,l  2,o  3,h  3,e  3,l  3,l  3,o
 
 	cout << endl << endl << "Power-set of range of ints " << endl;
@@ -65,6 +65,6 @@ int main()
 	cout << endl << endl << "Power-set of chain " << endl;
 	for (auto subset: powerset(chain(range('a','c'),range('x','z'))))
 		cout << subset;  // {}{a}{b}{a,b}{x}{a,x}{b,x}{a,b,x}{y}{a,y}{b,y}{a,b,y}{x,y}{a,x,y}{b,x,y}{a,b,x,y}
-	*/
+	
 	return 0;
 }
