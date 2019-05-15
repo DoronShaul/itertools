@@ -70,8 +70,8 @@ public:
 template <typename T, typename U>
 auto zip(T first, U second)
 {
-    std::pair<decltype(first.begin()), decltype(second.begin())> firstPair(first.begin(), second.begin());
-    std::pair<decltype(first.end()), decltype(second.end())> secondPair(first.end(), second.end());
+    pair<decltype(first.begin()), decltype(second.begin())> firstPair(first.begin(), second.begin());
+    pair<decltype(first.end()), decltype(second.end())> secondPair(first.end(), second.end());
     return zipIterator<decltype(first.begin()), decltype(second.begin())>(firstPair, secondPair);
 }
 
@@ -80,6 +80,6 @@ auto zip(T first, U second)
 template <typename T, typename U>
 ostream &operator<<(ostream &os, std::pair<T, U> &a)
 {
-    os << *a.first << "," << *a.second;
+    os << *a.first << *a.second<<",";
     return os;
 }

@@ -78,27 +78,27 @@ auto powerset(T power)
 
 } // namespace itertools
 
-// insert to ostream the correct set by bits
 template <typename T>
 ostream &operator<<(ostream &os, pair<T, uint> &pow)
 {
-    os << "{";
-    auto first = pow.first.begin();
-    auto last = pow.first.end();
     int i = 1;
+    auto head = pow.first.begin();
+    auto tail = pow.first.end();
     bool isFirst = true;
-    while (first != last)
+    os << "{";
+    while (head != tail)
     {
-        if (i & pow.second)
+        if (i & pow.second) //bitwise '&' to make true subset.
         {
             if (!isFirst)
                 os << ",";
 
-            os << *first;
+            os << *head;
             isFirst = false;
         }
-        first++;
-        i = i << 1;
+        i = i << 1; //shift left
+        head++;
+       
     }
     os << "}";
     return os;
